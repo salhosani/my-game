@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#101b3d">
+<title>تحدّي الذكاء الاصطناعي 🤖</title>
+<style>
+:root{--navy:#101b3d;--blue:#536dfe;--cyan:#45d6d0;--ink:#17213e;--muted:#68728b;--white:#fff}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;font-family:Tahoma,Arial,sans-serif;background:radial-gradient(circle at 10% 10%,#263e80 0,#101b3d 48%,#080f27 100%);color:var(--ink);display:grid;place-items:center;padding:18px}
+.app{width:min(100%,620px);background:#fff;border-radius:28px;overflow:hidden;box-shadow:0 24px 80px #0006}
+.top{background:linear-gradient(120deg,#182957,#465ee8);color:white;padding:25px 24px 22px;text-align:center}
+.robot{font-size:42px}.top h1{margin:7px 0;font-size:26px}.top p{margin:0;color:#e0e7ff;font-size:14px}
+main{padding:24px}.meta{display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:13px;margin-bottom:12px}
+.track{height:8px;background:#edf0fa;border-radius:99px;overflow:hidden;margin-bottom:23px}.fill{height:100%;width:0;background:linear-gradient(90deg,var(--blue),var(--cyan));transition:width .3s}
+h2{font-size:21px;line-height:1.65;margin:0 0 20px}
+.answers{display:grid;gap:11px}.answer{width:100%;border:2px solid #e6eafa;background:#f9faff;border-radius:15px;padding:15px;text-align:right;font:inherit;font-size:16px;color:var(--ink);cursor:pointer;transition:.15s}
+.answer:hover{border-color:#8c9cff;background:#f1f3ff}.answer:disabled{cursor:default}.answer.correct{background:#e8fbf5;border-color:#23b58a}.answer.wrong{background:#fff0f0;border-color:#ef7777}
+.feedback{min-height:27px;margin:14px 0 4px;font-weight:bold;font-size:14px}.btn{border:0;border-radius:14px;padding:14px 22px;background:var(--blue);color:white;font:inherit;font-weight:bold;font-size:16px;cursor:pointer;width:100%;margin-top:12px}.btn:disabled{opacity:.35;cursor:default}
+.start{text-align:center}.start p{line-height:1.9;color:var(--muted)}.pill{display:inline-block;background:#eef1ff;color:#4054d6;border-radius:99px;padding:7px 13px;font-size:13px;font-weight:bold;margin:8px 0 14px}
+.result{text-align:center}.score{font-size:54px;font-weight:bold;color:#4359e8;margin:12px}.result h2{margin-bottom:4px}.result p{color:var(--muted);line-height:1.8}
+.small{font-size:12px;color:#8790a6;text-align:center;margin-top:18px}
+@media(max-width:420px){main{padding:20px}.top{padding:22px 16px}.top h1{font-size:23px}h2{font-size:19px}}
+</style>
+</head>
+<body>
+<div class="app">
+ <header class="top"><div class="robot">🤖✨</div><h1>تحدّي الذكاء الاصطناعي</h1><p>اختبر معلوماتك… وتعلّم بطريقة ممتعة!</p></header>
+ <main id="screen">
+  <section class="start">
+   <span class="pill">10 أسئلة • مستوى سهل</span>
+   <h2>جاهز للتحدّي؟</h2>
+   <p>جاوب عن أسئلة بسيطة من عرضنا عن الذكاء الاصطناعي وتقنية المعلومات في حياتنا اليومية والجامعة.<br>كل إجابة صحيحة = 10 نقاط 🎯</p>
+   <button class="btn" id="start">ابدأ اللعبة 🚀</button>
+  </section>
+ </main>
+</div>
+<script>
+const questions=[
+ {q:"ما المقصود بالذكاء الاصطناعي؟",a:["تقنية تساعد الأجهزة والبرامج على أداء مهام تحتاج عادةً إلى قدرات بشرية","نوع من ألعاب الفيديو فقط","جهاز لتخزين الصور"],c:0},
+ {q:"أي مثال من التالي يُعد مساعداً صوتياً؟",a:["الآلة الحاسبة","Siri أو Alexa","الطابعة"],c:1},
+ {q:"ما الذي تساعدنا فيه تطبيقات الترجمة الفورية؟",a:["تنظيم الغرفة","شحن الهاتف","فهم لغات مختلفة"],c:2},
+ {q:"كيف يمكن للتقنية أن تساعد الطالب في الجامعة؟",a:["البحث السريع عن المعلومات","إلغاء الحاجة إلى الدراسة","منع التعلّم"],c:0},
+ {q:"أي أداة تساعد في تنظيم المواعيد والتذكيرات؟",a:["تطبيقات الطقس فقط","التقويم والتذكيرات الذكية","مشغل الموسيقى"],c:1},
+ {q:"في مشروعنا، كيف ساعدنا ChatGPT؟",a:["صنع المجسّم بيده","طبع المجسّم مباشرة","ساعدنا في إعداد التصميم أو الملف"],c:2},
+ {q:"ما الجهاز الذي صنع المجسّم الحقيقي؟",a:["جهاز التصنيع ثلاثي الأبعاد","السماعة","الكاميرا"],c:0},
+ {q:"أي مما يلي مثال على استخدام الذكاء الاصطناعي في الحياة اليومية؟",a:["التوصيات الذكية أثناء التسوق عبر الإنترنت","المسطرة العادية","الدفتر الورقي"],c:0},
+ {q:"ما أفضل طريقة لاستخدام الذكاء الاصطناعي؟",a:["تصديق كل معلومة دون مراجعة","استخدامه بمسؤولية ومراجعة النتائج","استخدامه لخداع الآخرين"],c:1},
+ {q:"من يحدّد الهدف ويراجع النتيجة ويتخذ القرار؟",a:["الإنسان","الروبوت وحده","الهاتف فقط"],c:0}
+];
+let index=0,score=0,locked=false;
+const screen=document.getElementById('screen');
+function start(){index=0;score=0;renderQuestion()}
+function renderQuestion(){
+ locked=false;const q=questions[index];
+ screen.innerHTML=`<div class="meta"><span>السؤال ${index+1} من ${questions.length}</span><strong>⭐ ${score} نقطة</strong></div><div class="track"><div class="fill" style="width:${index/questions.length*100}%"></div></div><h2>${q.q}</h2><div class="answers">${q.a.map((x,i)=>`<button class="answer" data-i="${i}">${["أ","ب","ج"][i]}. ${x}</button>`).join("")}</div><div class="feedback" id="feedback"></div><button class="btn" id="next" disabled>${index===questions.length-1?"عرض النتيجة":"السؤال التالي ←"}</button>`;
+ document.querySelectorAll('.answer').forEach(b=>b.addEventListener('click',()=>choose(+b.dataset.i)));
+ document.getElementById('next').addEventListener('click',()=>{index++;index<questions.length?renderQuestion():result()});
+}
+function choose(i){
+ if(locked)return;locked=true;const q=questions[index];const buttons=[...document.querySelectorAll('.answer')];
+ buttons.forEach((b,n)=>{b.disabled=true;if(n===q.c)b.classList.add('correct');if(n===i&&i!==q.c)b.classList.add('wrong')});
+ if(i===q.c){score+=10;document.getElementById('feedback').textContent="إجابة صحيحة! أحسنت 👏";document.getElementById('feedback').style.color="#15956e"}
+ else{document.getElementById('feedback').textContent="مو مشكلة! الإجابة الصحيحة مميزة بالأخضر 💙";document.getElementById('feedback').style.color="#c15b5b"}
+ document.querySelector('.meta strong').textContent=`⭐ ${score} نقطة`;document.getElementById('next').disabled=false;
+}
+function result(){
+ const msg=score===100?"ممتاز! خبير ذكاء اصطناعي 🏆":score>=70?"أحسنت! عندك معلومات حلوة 🌟":score>=40?"بداية جميلة، تعلّم أكثر وجرّب مرة ثانية 💙":"لا تستسلم! جرّب مرة ثانية وبتبدع 🚀";
+ screen.innerHTML=`<section class="result"><div class="robot">🎉🤖</div><h2>خلصت التحدّي!</h2><div class="score">${score}/100</div><p>${msg}</p><button class="btn" id="again">العب مرة ثانية 🔄</button></section><div class="small">شكراً لمشاركتكم في بوث الذكاء الاصطناعي 💙</div>`;
+ document.getElementById('again').addEventListener('click',start);
+}
+document.getElementById('start').addEventListener('click',start);
+</script>
+</body>
+</html>
